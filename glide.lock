@@ -1,5 +1,5 @@
 hash: 0780fbea7c27c05ae519e0ce0885bda427b511064c36932175931c8fb8bf6b5d
-updated: 2016-01-12T18:50:42.066914583-08:00
+updated: 2016-01-12T23:57:13.531719273-08:00
 imports:
 - name: github.com/bitly/go-simplejson
   version: aabad6e819789e569bd6aabf444c935aa9ba1e44

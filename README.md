@@ -4,10 +4,19 @@
 
 ##Installation
 
+pre-reqs:
+* go1.5
+* [glide package manager](https://github.com/Masterminds/glide)
+
 ```sh
 #requires go1.5
 export GO15VENDOREXPERIMENT=1
-cd ./aws-auth-proxy
+
+mkdir -p $GOPATH/src/github.com/coreos
+cd $GOPATH/src/github.com/coreos
+git clone https://github.com/coreos/aws-auth-proxy
+cd aws-auth-proxy
+glide install
 go build github.com/coreos/aws-auth-proxy
 ```
 ##Example
