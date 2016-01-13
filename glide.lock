@@ -1,0 +1,36 @@
+hash: 0780fbea7c27c05ae519e0ce0885bda427b511064c36932175931c8fb8bf6b5d
+updated: 2016-01-12T18:50:42.066914583-08:00
+imports:
+- name: github.com/bitly/go-simplejson
+  version: aabad6e819789e569bd6aabf444c935aa9ba1e44
+  repo: https://github.com/bitly/go-simplejson
+- name: github.com/coreos/go-systemd
+  version: dd4f6b87c2a80813d1a01790344322da19ff195e
+  repo: https://github.com/coreos/go-systemd
+- name: github.com/coreos/pkg
+  version: 2c77715c4df99b5420ffcae14ead08f52104065d
+  subpackages:
+  - /flagutil
+- name: github.com/crowdmob/goamz
+  version: 3a06871fe9fc0281ca90f3a7d97258d042ed64c0
+  subpackages:
+  - /aws
+- name: github.com/feyeleanor/raw
+  version: 724aedf6e1a5d8971aafec384b6bde3d5608fba4
+  repo: https://github.com/feyeleanor/raw
+- name: github.com/feyeleanor/sets
+  version: 6c54cb57ea406ff6354256a4847e37298194478f
+  repo: https://github.com/feyeleanor/sets
+- name: github.com/feyeleanor/slices
+  version: bb44bb2e4817fe71ba7082d351fd582e7d40e3ea
+  repo: https://github.com/feyeleanor/slices
+- name: github.com/godbus/dbus
+  version: e4593d66e29678c26f84166fe231a03e0268ced5
+  repo: https://github.com/godbus/dbus
+- name: gopkg.in/check.v1
+  version: 4f90aeace3a26ad7021961c297b22c42160c7b25
+  repo: https://gopkg.in/check.v1
+- name: gopkg.in/yaml.v1
+  version: 9f9df34309c04878acc86042b16630b0f696e1de
+  repo: https://gopkg.in/yaml.v1
+devImports: []

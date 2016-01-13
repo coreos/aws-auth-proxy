@@ -1,0 +1,8 @@
+package: .
+import:
+- package: github.com/coreos/pkg
+  subpackages:
+  - /flagutil
+- package: github.com/crowdmob/goamz
+  subpackages:
+  - /aws
