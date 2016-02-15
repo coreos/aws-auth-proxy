@@ -10,12 +10,16 @@ import (
 	"time"
 	"net/http"
 	"net/url"
+	"strings"
 
 	"github.com/coreos/pkg/flagutil"
-	"github.com/crowdmob/goamz/aws"
+	"github.com/goamz/goamz/aws"
 )
 
 func main() {
+
+	fmt.Println("Pronto fork")
+
 	var (
 		auth          aws.Auth
 		targetURL     url.URL
@@ -48,7 +52,7 @@ func main() {
 	}
 	fs.Parse(os.Args[1:])
 
-	region = aws.GetRegion(regionName)
+	region = aws.Regions[regionName]
 
 	signer := aws.NewV4Signer(auth, serviceName, region)
 
@@ -84,9 +88,11 @@ func (h *AWSProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	proxyURL.Host = h.TargetURL.Host
 	proxyURL.Scheme = h.TargetURL.Scheme
 
-	req, err := http.NewRequest(
+	// TODO may be more to add
+  signingURL := strings.Replace(proxyURL.String(), ",", "%2C", -1);
+	signedReq, err := http.NewRequest(
 		r.Method,
-		proxyURL.String(),
+		signingURL,
 		r.Body,
 	)
 
@@ -95,11 +101,20 @@ func (h *AWSProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req.Header.Set("X-Amz-Date", time.Now().UTC().Format(aws.ISO8601BasicFormat))
+	signedReq.Header.Set("host", proxyURL.Host)
+	signedReq.Header.Set("x-amz-date", time.Now().UTC().Format(aws.ISO8601BasicFormat))
+	h.Signer.Sign(signedReq)
 
-	h.Signer.Sign(req)
+	actualReq, _ := http.NewRequest(
+		r.Method,
+		proxyURL.String(),
+		r.Body,
+	)
+	actualReq.Header.Set("host", signedReq.Host)
+	actualReq.Header.Set("Authorization", signedReq.Header.Get("Authorization"))
+	actualReq.Header.Set("X-Amz-Date", signedReq.Header.Get("X-Amz-Date"))
 
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := http.DefaultClient.Do(actualReq)
 	if err != nil {
 		respondError(err)
 		return
