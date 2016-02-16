@@ -82,8 +82,7 @@ func EscapeURL(s string) string {
 
 	escapedUrl, _ := url.Parse(path.String())
 	if (len(parts) > 1) {
-		query := url.URL{Path: parts[1]}
-		escapedUrl.RawQuery = query.String()
+		escapedUrl.RawQuery = parts[1]
 	}
 
 	return strings.Replace(escapedUrl.String(), ",", "%2C", -1)
