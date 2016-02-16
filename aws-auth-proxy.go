@@ -17,9 +17,6 @@ import (
 )
 
 func main() {
-
-	fmt.Println("Pronto fork")
-
 	var (
 		auth          aws.Auth
 		targetURL     url.URL
@@ -77,6 +74,21 @@ func copyHeaders(dst, src http.Header) {
 		}
 	}
 }
+
+// Escapes URL with building URL lib plus add comma
+func EscapeURL(s string) string {
+	parts := strings.Split(s,"?")
+	path := &url.URL{Path: parts[0]}
+
+	escapedUrl, _ := url.Parse(path.String())
+	if (len(parts) > 1) {
+		query := url.URL{Path: parts[1]}
+		escapedUrl.RawQuery = query.String()
+	}
+
+	return strings.Replace(escapedUrl.String(), ",", "%2C", -1)
+}
+
 func (h *AWSProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
@@ -88,8 +100,7 @@ func (h *AWSProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	proxyURL.Host = h.TargetURL.Host
 	proxyURL.Scheme = h.TargetURL.Scheme
 
-	// TODO may be more to add
-  signingURL := strings.Replace(proxyURL.String(), ",", "%2C", -1);
+  signingURL := EscapeURL(proxyURL.String());
 	signedReq, err := http.NewRequest(
 		r.Method,
 		signingURL,
@@ -105,16 +116,9 @@ func (h *AWSProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	signedReq.Header.Set("x-amz-date", time.Now().UTC().Format(aws.ISO8601BasicFormat))
 	h.Signer.Sign(signedReq)
 
-	actualReq, _ := http.NewRequest(
-		r.Method,
-		proxyURL.String(),
-		r.Body,
-	)
-	actualReq.Header.Set("host", signedReq.Host)
-	actualReq.Header.Set("Authorization", signedReq.Header.Get("Authorization"))
-	actualReq.Header.Set("X-Amz-Date", signedReq.Header.Get("X-Amz-Date"))
+	signedReq.URL, _ = url.Parse(proxyURL.String())
 
-	resp, err := http.DefaultClient.Do(actualReq)
+	resp, err := http.DefaultClient.Do(signedReq)
 	if err != nil {
 		respondError(err)
 		return
