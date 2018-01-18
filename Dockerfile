@@ -8,7 +8,7 @@ RUN mkdir -p ./src/github.com/Masterminds
 WORKDIR $GOPATH/src/github.com/Masterminds
 RUN git clone https://github.com/Masterminds/glide
 WORKDIR glide
-RUN make bootstrap
+RUN make bootstrap-dist
 RUN make install
 RUN mkdir -p $GOPATH/src/github.com/coreos
 
