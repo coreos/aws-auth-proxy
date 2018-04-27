@@ -1,8 +1,10 @@
 package: .
 import:
 - package: github.com/coreos/pkg
+  version: v2
   subpackages:
   - /flagutil
-- package: github.com/crowdmob/goamz
+- package: github.com/goamz/goamz
+  version: 8b901b531db8fca1529b05bfa948605b01ca3ab0
   subpackages:
   - /aws
