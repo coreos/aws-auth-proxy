@@ -29,6 +29,13 @@ func main() {
 
 	fs.StringVar(&auth.AccessKey, "access-key", "", "aws access key id")
 	fs.StringVar(&auth.SecretKey, "secret-key", "", "aws secret access key")
+        // Ensure we can get authorization
+        // if using IAM role auth this will also set the token for the first time
+        // which Sign will renew when expiring
+        auth, err := aws.GetAuth(auth.AccessKey, auth.SecretKey, "", time.Time{})
+        if err != nil {
+          log.Fatal(err)
+        }
 	fs.StringVar(&serviceName, "service-name", "", "aws service name")
 	var regionName string
 	fs.StringVar(&regionName, "region-name", "", "aws region name")
